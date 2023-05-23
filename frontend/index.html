@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+<title>STAKE-n-MORE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+<script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
+<script language="javascript" type="text/javascript" src="staker_abi.js"></script>
+<script src = "gui.js" type = ""/></script>
+<script src = "app.js" type = ""/></script>
+<script src = "metamask.js" type = ""/></script>
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
+.w3-bar,h1,button {font-family: "Montserrat", sans-serif}
+.fa-anchor,.fa-coffee {font-size:200px}
+</style>
+</head>
+<body class="w3-pale-red" style="background-color:rgb(240, 59, 59)"
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-blue w3-card w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-blue" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a id="menuMain" href="javascript:app.openPageMain();" class="w3-bar-item w3-button w3-padding-large w3-white w3-hover-white"> <img src="images/evmos.png" style="width:30px;height:30px;"></a>
+    <a id="menuFeat" href="javascript:app.openPageFeat();" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">  <img src="images/stake.png" style="width:30px;height:30px;"></a>
+    <a id="menuDefiApp" href="javascript:app.openPageDefi();" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">  <img src="images/defi.png" style="width:30px;height:30px;"></a>
+    <a id="menuIdApp" href="javascript:app.openPageId();" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">  <img src="images/ticket.png" style="width:30px;height:30px;"></a>
+    <a id="menuIdOwner" href="javascript:app.openPageOwner();" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">  <img src="images/owner.png" style="width:30px;height:30px;" hidden></a>
+    <a id="btnConnect" href="javascript:metamask.connectMetamask();" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white w3-right">Connect</a>
+    <b id="gmPlayer" class="w3-bar-item w3-hide-small w3-padding-large w3-right"> </b>
+  </div>
+
+  <!-- Navbar on small screens -->
+  <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+    <a id="menuFeat1" href="javascript:app.openPageDefi();" class="w3-bar-item w3-button w3-padding-large">Stake</a>
+    <a id="menuDefiApp1" href="javascript:app.openPageDefi();" class="w3-bar-item w3-button w3-padding-large">DeFi</a>
+    <a id="menuIdApp1" href="javascript:app.openPageId();" class="w3-bar-item w3-button w3-padding-large">Ticket</a>
+    <a id="btnConnect1" href="javascript:metamask.connectMetamask();" class="w3-bar-item w3-button w3-padding-large w3-rigt">Connect</a>
+    <b id="gmPlayer1" class="w3-bar-item w3-hide-small w3-padding-large w3-right"> </b>
+  </div>
+</div>
+
+
+<header id="mainHeader" class="w3-container w3-center" style="padding:128px 16px">
+  <h1 class="w3-margin w3-jumbo">STAKE-n-MORE</h1>
+  <p class="w3-xxlarge">Leverage your EVMOS by staking</p>
+  <p class="w3-xlarge">Get unique NFT token (SEM) for each of your stake bundle </p>
+  <p class="w3-xlarge">Use SEM for various applications (DeFi, Ticket, and more) </p>
+  <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top"  onclick = "app.openPageFeat()">STAKE</button>
+</header>
+
+<div id="statusTop" class="w3-center w3-red" style="padding-top:60px">
+  <p id="txGameStatus" class="w3-center">status</p>
+</div>
+<div id="statusBottom" class="w3-center w3-yellow w3-bottom" >
+  <b id="txStatus" class="w3-yellow">info</b>
+</div>
+
+<!-- First Grid -->
+
+<div id="featPageToken" class="w3-full w3-center w3-container w3-bottombar w3-border-red w3-pale-red" hidden >
+  <div id="featDataBalance" class="">
+  </div>
+    <div class="w3-row-padding w3-center w3-padding-large" >
+      <div class="w3-center w3-hover-opacity w3-grayscale w3-margin-bottom">
+        <h2 id="currentMeritToken">0</h2>
+        <div class="w3-center w3-container">
+          <p>SEM balance</p>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div id="featPageOwner" class="w3-full w3-center w3-container w3-bottombar w3-border-red w3-pale-red" hidden >
+  <div id="" class="">
+  </div>
+    <div class="w3-row-padding w3-center w3-padding-large" >
+      <div class="w3-half w3-center w3-hover-opacity w3-grayscale w3-margin-bottom">
+        <div class="w3-center w3-container style=display: flex;">
+          <input type="button" id="" onclick = "app.approveAll()" value="ApproveAll" class="w3-button w3-teal" style="width:40%" >
+        </div>
+      </div>
+      <div class="w3-half w3-center w3-hover-opacity w3-grayscale w3-margin-bottom">
+        <div class="w3-center w3-container style=display: flex;">
+          <input type="button" id="" onclick = "app.ss_approveRequiredMethods()" value="ApproveRequired" class="w3-button w3-teal" style="width:40%" >
+        </div>
+      </div>
+    </div>
+</div>
+
+<div id="featPageStat" class="w3-full w3-center w3-container w3-topbar w3-bottombar w3-border-red w3-pale-red" hidden >
+    <div class="w3-row-padding w3-center w3-padding-large" >
+      <div class="w3-half w3-center w3-hover-opacity w3-grayscale w3-margin-bottom">
+        <h2 id="moId">0</h2>
+        <div class="w3-center w3-container style=display: flex;">
+          <input type="button" id="moIdPrev" onclick = "app.displayPrevMeritInfo()" value="<" class="w3-button w3-teal" style="width:10%" >
+          <input type="button" id="moIdText" onclick = "" value="ID" class="w3-button w3-black" style="width:30%" disabled >
+          <input type="button" id="moIdNext" onclick = "app.displayNextMeritInfo()" value=">" class="w3-button w3-teal" style="width:10%" >
+        </div>
+      </div>
+      <div class="w3-half w3-center w3-hover-opacity w3-grayscale w3-margin-bottom">
+        <h2 id="moAmount">0</h2>
+        <div class="w3-center w3-container">
+          <p>Amount</p>
+        </div>
+      </div>
+      <div class="w3-half w3-center w3-hover-opacity w3-grayscale w3-margin-bottom">
+        <h2 id="moState">Delegated</h2>
+        <div class="w3-center w3-container">
+          <p>State</p>
+        </div>
+      </div>
+      <div class="w3-half w3-center w3-hover-opacity w3-grayscale w3-margin-bottom">
+        <h2 id="moTime">0</h2>
+        <div class="w3-center w3-container">
+          <p>Time</p>
+        </div>
+      </div>
+      <div class="w3-half w3-center w3-hover-opacity w3-grayscale w3-margin-bottom">
+        <div class="w3-center w3-container style=display: flex;">
+          <input type="button" id="moStakeUnstake" onclick = "app.stakeUnstake()" value="--" class="w3-button w3-black" style="width:30%" disabled >
+        </div>
+      </div>
+      <div class="w3-half w3-center w3-hover-opacity w3-grayscale w3-margin-bottom">
+        <div class="w3-center w3-container style=display: flex;">
+          <input type="button" id="moWithdraw" onclick = "app.stakeWithdraw()" value="Withdraw" class="w3-button w3-black" style="width:30%" disabled >
+        </div>
+      </div>
+    </div>
+</div>
+
+<div id="featPage1" class="w3-full w3-center w3-container w3-bottombar w3-border-red w3-pale-red">
+  <div id="featData" class="">
+  </div>
+    <div class="w3-row-padding w3-center w3-padding-large" >
+      <div id="divMerit0" class="w3-third w3-center w3-hover-opacity w3-grayscale w3-margin-bottom">
+        <img src="images/1.png" alt="stake100" style="width:80%;margin-bottom:-9px">
+        <div class="w3-center w3-container">
+          <p>Stake 100 EVMOS </p>
+        </div>
+        <div id="divMeritCB1" >
+          <input type="button" id="buyMerit1" onclick = "app.buyMerit(1)" value="Buy" class="w3-button w3-teal" style="width:40%" >
+        </div>
+      </div>
+    
+      <div class="w3-third w3-center w3-hover-opacity w3-grayscale w3-margin-bottom">
+        <img src="images/hithard.png" alt="stakeCustom" style="width:80%;margin-bottom:-9px">
+        <div class="w3-center w3-container">
+          <p>Stake EVMOS</p>
+        </div>
+        <div id="divMeritCB0">
+          <input type="number" id="opMeritQuantity" name="quantity" min="1" value = "0.01" class ="w3-center">
+        </div>
+        <div id="divMeritCB0" class= "w3-margin-top">
+          <input type="button" id="buyMerit0" onclick = "app.buyMerit(0)" value="Buy" class="w3-button w3-teal" style="width:40%" >
+        </div>
+      </div>
+  
+      <div class="w3-third w3-center w3-hover-opacity w3-grayscale w3-margin-bottom">
+        <img src="images/2.png" alt="stake200" style="width:80%;margin-bottom:-9px">
+        <div class="w3-center w3-container">
+          <p>Stake 200 EVMOS</p>
+        </div>
+        <div id="divMeritCB2">
+          <input type="button" id="buyMerit2" onclick = "app.buyMerit(2)" value="Buy" class="w3-button w3-teal" style="width:40%" >
+        </div>
+      </div>
+    </div>
+</div>
+
+<div id="featPageDefi" class="w3-full w3-center w3-container w3-bottombar w3-border-red w3-pale-red"  >
+  <div id="" class="">
+  </div>
+    <h1 class="w3-xxlarge">Demo app to use SEM in DeFi</h1>
+    <p id="txtDefi" class="w3-xxlarge">You need to use your SEM for collateral </p>
+    <p id="txtDefiDemo" class="w3-xlarge">Please get NFT token (SEM) for this demo application </p>
+    <button id="btnDefiBorrow" class="w3-button w3-black w3-padding-large w3-large w3-margin-top w3-margin-bottom"  disabled onclick = "app.defiBorrow()">BORROW</button>
+</div>
+
+<div id="featPageTicket" class="w3-full w3-center w3-container w3-bottombar w3-border-red w3-pale-red"  >
+  <div id="" class="">
+  </div>
+    <h1 class="w3-xxlarge">Demo app to use SEM as ticket</h1>
+    <p id="txtEligible" class="w3-xxlarge">You are not eligible to login</p>
+    <p id="txtTicketDemo" class="w3-xlarge">Please get NFT token (SEM) for this demo application </p>
+    <button id="btnTicketLogin" class="w3-button w3-black w3-padding-large w3-large w3-margin-top w3-margin-bottom"  disabled onclick = "app.ticketLogin()">LOGIN</button>
+</div>
+</div>
+
+<footer id="mainFooter" class="w3-container w3-padding-64 w3-center w3-opacity">  
+  <div class="w3-xlarge w3-padding-32">
+    <a href="https://github.com/tausparagus/stkapp">
+    <i class="fa fa-github w3-hover-opacity"></i>
+  </a>
+ </div>
+ <p hidden >Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer> 
+
+<script>
+// Used to toggle the menu on small screens when clicking on the menu button
+function myFunction() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+window.onload= metamask.onLoad ();
+</script>
+
+</body>
+</html>
